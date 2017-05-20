@@ -33,7 +33,7 @@
 //Pines: RX conectado a D3, TX conectado a D2
 SoftwareSerial mySerial(3, 2);
 
-#define SSID   "pruebaWiFi"
+#define SSID   "prueba22"
 #define PASS   "pwd"
 
 //Guarda el mensaje recibido por puerto serial
@@ -162,8 +162,9 @@ void parseData(){
     Serial.print("Agregar la tarjeta: ");
     Serial.println(recibido.substring(2));
 
-   byte newID[8];
-   (recibido.substring(2)).getBytes(newID, 8);
+   char newID[8];
+   
+   recibido.toCharArray(newID, 8);
    
     writeID(newID);
   }
@@ -171,10 +172,6 @@ void parseData(){
   else if(recibido.charAt(0) == '3'){
     Serial.print("Eliminar la tarjeta: ");
     Serial.println(recibido.substring(2));
-   
-   byte newID[8];
-   (recibido.substring(2)).getBytes(newID, 8);
-   deleteID(newID);
   }
   //Pregunta por el status
   else if(recibido.charAt(0) == '4'){
@@ -194,7 +191,6 @@ void leer() {
   if (mySerial.available()) {
     //Lee todos los datos disponibles
     recibido = mySerial.readString();
-    Serial.println(recibido);
 
     //Busca el inicio del mensaje en sí (el módulo escribe "+IDP, 0,1:msj")
     int index = recibido.indexOf(":") + 1;
@@ -230,8 +226,10 @@ void SendCmd (String ATcmd, int Tespera) {
 void setup() {
 
   pinMode(sensorMagnetico, INPUT);
-   digitalWrite(sensorMagnetico, HIGH);
-  mySerial.begin(38400);
+  digitalWrite(sensorMagnetico, HIGH);
+  
+  //Este valor depende del firmware del ESP8266
+  mySerial.begin(115200);
   //Pone el máximo tiempo de espera a 50ms
   mySerial.setTimeout(50);
   // Función para crear un AP con el módulo ESP8266
@@ -301,6 +299,7 @@ void loop () {
   
   //Chequea si hay datos a leer del módulo WiFi
   leer();
+
   
   estadoMagnetico();
    
@@ -309,6 +308,7 @@ void loop () {
     rfidSetup();
   }
   updateServo();  
+  
   
 }
 
