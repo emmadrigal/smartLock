@@ -366,23 +366,24 @@ void rfidSetup(){
       }
       else {      // If not, show that the ID was not valid
         Serial.println(F("You shall not pass"));
+        PuertaAbierta=false;
         //denied();
       }
     }
   }  
 }
 /////////////////////////////////////////  Motor position    ///////////////////////////////////
-bool previuosState= PuertaAbierta;
+bool previuosState=false;
 void updateServo(){
   if(PuertaAbierta and (previuosState != PuertaAbierta)){
     servoMotor.write(0);
-    previuosState = PuertaAbierta;
+    Serial.println("Puerta abierta");
+    previuosState = PuertaAbierta;  
   }else if(previuosState != PuertaAbierta){
     servoMotor.write(90); 
-    previuosState = PuertaAbierta;
-  } else{
+    Serial.println("Puerta cerrrada");
     previuosState = PuertaAbierta;  
-  }
+  } 
 }
 
 /////////////////////////////////////////  Access Granted    ///////////////////////////////////
